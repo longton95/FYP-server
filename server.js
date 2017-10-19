@@ -4,20 +4,17 @@
 
 const express = require('express');
 const bodyParser = require('body-parser');
-const fs = require('fs');
-const request = require('request');
-const cheerio = require('cheerio');
+// const request = require('request');
+// const cheerio = require('cheerio');
 const routes = require('./routes');
 const asda = require('./routes/asda');
 
 const app = express();
 
 const mongoose   = require('mongoose');
-const promise = mongoose.connect('mongodb://localhost/restfulServer', {
-  useMongoClient: true,
-});
-// mongoose.connect('mongodb://localhost/restfulServer');
-
+// const DB = mongoose.connect('mongodb://localhost/restfulServer', {
+//   useMongoClient: true,
+// });
 
 
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -31,8 +28,6 @@ const	port = process.env.PORT || 5000;
 // REGISTER OUR ROUTES
 
 app.use('/api', routes);
-app.use('/asda', asda);
-
 
 app.listen(port);
 

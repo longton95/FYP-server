@@ -1,7 +1,9 @@
 const express = require('express')
 const router = express.Router()
-const request = require('request');
+
 const asda = require('./asda');
+const tesco = require('./tesco');
+
 
 
 router.use((req, res, next) => {
@@ -15,5 +17,6 @@ router.get('/', (req, res) => {
 });
 
 router.use('/asda', asda);
+router.use('/tesco', tesco);
 
 module.exports = router;
