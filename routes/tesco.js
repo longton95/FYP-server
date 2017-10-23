@@ -50,7 +50,9 @@ router.get('/item/:gtin', (req, res) => {
 
 				var item = JSON.parse(response)
 
-				res.json(item.uk.ghs.products.results);
+				res.json({
+					Product: item.uk.ghs.products.results
+				});
 			})
 	};
 
@@ -59,19 +61,6 @@ router.get('/item/:gtin', (req, res) => {
 		.catch(function(err) {
 			console.error("Failed to get JSON from tescos API", err);
 		})
-
-	// rp(options)
-	// 	.then(function(response) {
-	//
-	//       var item = JSON.parse(response)
-	//
-	// 		res.json({
-	// 			Product: item
-	// 		});
-	// 	})
-	// 	.catch(function(err) {
-	// 		console.error("Failed to get JSON from tescos API", err);
-	// 	})
 });
 
 module.exports = router;
