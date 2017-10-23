@@ -50,9 +50,7 @@ router.get('/item/:gtin', (req, res) => {
 
 				var item = JSON.parse(response)
 
-				res.json({
-					Product: item.uk.ghs.products.results
-				});
+				res.json(item.uk.ghs.products.results);
 			})
 	};
 
