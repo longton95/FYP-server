@@ -14,6 +14,7 @@ router.get('/', (req, res) => {
 });
 
 router.get('/item/:gtin', (req, res) => {
+	var results = {};
 	var barcode = {
 		url: 'https://dev.tescolabs.com/product/?',
 		headers: {
@@ -21,46 +22,53 @@ router.get('/item/:gtin', (req, res) => {
 		},
 		qs: {
 			gtin: req.params.gtin
-		}
+		},
+		json: true
 	};
-	var firstMethod = function() {
-		var promise = rp(barcode)
+	rp(barcode)
+		.then(function(itemSearch) {
+			results.itemSearch = itemSearch;
+		}).then(function() {
 
-		return promise;
-	};
+			var product = {
+				uri: 'https://dev.tescolabs.com/grocery/products/?',
+				headers: {
+					'Ocp-Apim-Subscription-Key': '5b08eb2e2d8c4790a7d3c6f35a13dd6e'
+				},
+				qs: {
+					query: results.itemSearch.products[0].brand,
+					offset: 0,
+					limit: 10,
+					tpnb: results.itemSearch.products[0].tpnb
+				},
+				json: true
+			};
 
-	var secondMethod = function(response) {
-		var item = JSON.parse(response)
-		var product = {
-			uri: 'https://dev.tescolabs.com/grocery/products/?',
-			headers: {
-				'Ocp-Apim-Subscription-Key': '5b08eb2e2d8c4790a7d3c6f35a13dd6e'
-			},
-			qs: {
-				query: item.products[0].brand,
-				offset: 0,
-				limit: 10,
-				tpnb: item.products[0].tpnb
+			return rp(product);
+		}).then(function(itemPrice) {
+			res.status(200);
 
-			}
-		};
-		rp(product)
+			results.itemPrice = itemPrice;
 
-			.then(function(response) {
-
-				var item = JSON.parse(response)
+			if (results.itemPrice.uk.ghs.products.totals.all != 0) {
 
 				res.json({
-					Product: item.uk.ghs.products.results
+					Product: results.itemPrice.uk.ghs.products.results
 				});
-			})
-	};
 
-	firstMethod()
-		.then(secondMethod)
-		.catch(function(err) {
-			console.error("Failed to get JSON from tescos API", err);
-		})
+			} else {
+
+				res.status(206);
+				res.json({
+					Product: results.itemSearch.products[0]
+				});
+
+			}
+
+		}).catch(function(err) {
+			res.status(404).send("Not found. 2");
+		});
+
 });
 
 module.exports = router;
