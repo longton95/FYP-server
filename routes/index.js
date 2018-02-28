@@ -3,7 +3,8 @@ const router = express.Router()
 
 const asda = require('./asda');
 const tesco = require('./tesco');
-
+const user = require('./user');
+const scraper = require('./scraper');
 
 
 router.use((req, res, next) => {
@@ -18,5 +19,7 @@ router.get('/', (req, res) => {
 
 router.use('/asda', asda);
 router.use('/tesco', tesco);
+router.use('/user', user);
+// router.use('/scraper', scraper);
 
 module.exports = router;
