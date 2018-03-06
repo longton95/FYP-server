@@ -12,7 +12,7 @@ const routes = require('./routes');
 
 const app = express();
 
-mongoose.connect(config.database);
+// mongoose.connect(config.database);
 app.set('superSecret', config.secret); // secret variable
 
 
