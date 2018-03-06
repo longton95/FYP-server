@@ -1,6 +1,6 @@
 module.exports = {
 
     'secret': 'tester',
-    'database': 'mongodb://localhost/restfulServer'
+    'database': process.env.MONGODB_URI ||'mongodb://localhost/restfulServer'
 
 };
