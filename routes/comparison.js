@@ -7,13 +7,7 @@ router.use((req, res, next) => {
 	next()
 })
 
-router.get('/', (req, res) => {
-	res.json({
-		message: 'Test API'
-	});
-});
-
-router.get('/item/:gtin', (req, res) => {
+router.get('/:gtin', (req, res) => {
 	var results = {};
 	var barcode = {
 		url: 'https://dev.tescolabs.com/product/?',
@@ -28,7 +22,8 @@ router.get('/item/:gtin', (req, res) => {
 	rp(barcode)
 		.then(function(itemSearch) {
 			results.itemSearch = itemSearch;
-		}).then(function() {
+		})
+		.then(function() {
 
 			var product = {
 				uri: 'https://dev.tescolabs.com/grocery/products/?',
@@ -45,27 +40,37 @@ router.get('/item/:gtin', (req, res) => {
 			};
 
 			return rp(product);
-		}).then(function(itemPrice) {
-			res.status(200);
-
+		})
+		.then(function(itemPrice) {
 			results.itemPrice = itemPrice;
+			var options = {
+				uri: 'https://api-groceries.asda.com/api/items/search?',
+				qs: {
+					keyword: results.itemPrice.uk.ghs.products.results[0].name
+				}
+			};
+			rp(options)
 
-			if (results.itemPrice.uk.ghs.products.totals.all != 0) {
+				.then(function(comparison) {
 
-				res.json({
-					Product: results.itemPrice.uk.ghs.products.results
-				});
+					var asda = JSON.parse(comparison)
+					if (results.itemPrice.uk.ghs.products.totals.all != 0) {
 
-			} else {
+						res.json({
+							asda: asda.items[0],
+							tesco: results.itemPrice.uk.ghs.products.results
+						});
 
-				res.status(206);
-				res.json({
-					Product: results.itemSearch.products[0]
-				});
+					} else {
 
-			}
-
-		}).catch(function(err) {
+						res.status(206);
+						res.json({
+							tesco: results.itemSearch.products[0]
+						});
+					}
+				})
+		})
+		.catch(function(err) {
 			res.status(404).send("Not found.");
 		});
 
