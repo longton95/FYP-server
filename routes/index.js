@@ -19,8 +19,10 @@ router.use(function(req, res, next) {
 
     jwt.verify(token, app.get('secret'), function(err, decoded) {
       if (err) {
+         res.status(403);
         return res.json({ success: false, message: 'Failed to authenticate token.' });
       } else {
+         res.status(200);
         req.decoded = decoded;
         next();
       }

@@ -23,10 +23,12 @@ router.post('/', (req, res) => {
      if (err) throw err;
 
      if (!user) {
+        res.status(403);
        res.json({ success: false, message: 'Authentication failed. User not found.' });
      } else if (user) {
 
        if (user.password != req.body.password) {
+          res.status(403);
          res.json({ success: false, message: 'Authentication failed. Wrong password.' });
        } else {
 
@@ -36,6 +38,7 @@ router.post('/', (req, res) => {
 
          var token = jwt.sign(payload, app.get('secret'), { expiresIn: '30d' });
 
+         res.status(200);
          res.json({
            success: true,
            token: token
