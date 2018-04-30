@@ -44,7 +44,7 @@ router.get('/:gtin', (req, res) => {
 		.then(function(itemPrice) {
 			results.itemPrice = itemPrice;
 			var options = {
-				uri: 'https://api-groceries.asda.com/api/items/search?',
+					uri: 'https://api-groceries.asda.com/api/items/search?',
 				qs: {
 					keyword: results.itemPrice.uk.ghs.products.results[0].name
 				}
@@ -56,6 +56,7 @@ router.get('/:gtin', (req, res) => {
 					var asda = JSON.parse(comparison)
 					if (results.itemPrice.uk.ghs.products.totals.all != 0) {
 
+						res.status(200);
 						res.json({
 							asda: asda.items[0],
 							tesco: results.itemPrice.uk.ghs.products.results
