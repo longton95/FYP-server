@@ -11,6 +11,8 @@ const user = require('./user');
 
 app.set('secret', config.secret);
 
+router.use('/user', user);
+
 router.use(function(req, res, next) {
 
   var token = req.body.token || req.query.token || req.headers['x-access-token'];
@@ -44,6 +46,5 @@ router.get('/', (req, res) => {
 router.use('/compare', compare);
 router.use('/asda', asda);
 router.use('/tesco', tesco);
-router.use('/user', user);
 
 module.exports = router;

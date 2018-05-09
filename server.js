@@ -1,9 +1,8 @@
-//npm config set proxy http://wwwproxy.hud.ac.uk:3128
-
 const express = require('express');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const morgan = require('morgan');
+const multer = require('multer');
 
 const routes = require('./routes');
 const config = require('./config');
@@ -11,6 +10,7 @@ const auth = require('./routes/auth');
 
 
 const app = express();
+const upload = multer();
 
 mongoose.connect(config.database,{
   useMongoClient: true,
@@ -18,6 +18,7 @@ mongoose.connect(config.database,{
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
+app.use(upload.array()); 
 
 app.use(morgan('dev'));
 
