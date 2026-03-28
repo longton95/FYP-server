@@ -12,7 +12,7 @@
     "axios": "^0.16.2",
     "body-parser": "^1.18.2",
     "cheerio": "^1.0.0-rc.2",
-    "express": "^4.16.3",
+    "express": "^4.22.1",
     "jsonwebtoken": "^8.2.1",
     "mongodb": "^2.2.35",
     "mongoose": "^4.13.12",
